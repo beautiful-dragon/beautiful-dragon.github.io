@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="闭包  – 本质 是一个函数内部创建另一个函数 特性：  函数嵌套函数 函数内部可以引用外部参数和变量 参数和变量不会被垃圾回收机制回收   结构：  函数作返回值  1234567891011121314151617181920212223function a()&amp;#123;  var name  &#x3D; &amp;#x27;leo&amp;#x27;  return function()&amp;#123;    ret">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dragon">
+<meta property="og:url" content="http://example.com/2020/12/18/closure/index.html">
+<meta property="og:site_name" content="Dragon">
+<meta property="og:description" content="闭包  – 本质 是一个函数内部创建另一个函数 特性：  函数嵌套函数 函数内部可以引用外部参数和变量 参数和变量不会被垃圾回收机制回收   结构：  函数作返回值  1234567891011121314151617181920212223function a()&amp;#123;  var name  &#x3D; &amp;#x27;leo&amp;#x27;  return function()&amp;#123;    ret">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-18T14:47:59.887Z">
+<meta property="article:modified_time" content="2020-10-24T14:20:30.626Z">
+<meta property="article:author" content="Leo">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Dragon</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/12/18/hello-world/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/12/18/closure/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/12/18/closure/&text="><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/12/18/closure/&title="><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/12/18/closure/&is_video=false&description="><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://example.com/2020/12/18/closure/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/12/18/closure/&title="><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/12/18/closure/&title="><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/12/18/closure/&title="><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/12/18/closure/&title="><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/12/18/closure/&name=&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/12/18/closure/&t="><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AD%E5%8C%85-%E2%80%93-%E6%9C%AC%E8%B4%A8-%E6%98%AF%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E5%86%85%E9%83%A8%E5%88%9B%E5%BB%BA%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">闭包  – 本质 是一个函数内部创建另一个函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%8D%E6%B3%95%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">2.</span> <span class="toc-text">词法作用域</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6"><span class="toc-number">3.</span> <span class="toc-text">垃圾回收机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">内存泄漏</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#window-critical"><span class="toc-number">5.</span> <span class="toc-text">window critical</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#function-%E7%AB%8B%E5%8D%B3%E6%89%A7%E8%A1%8C-%EF%BC%88IIFE%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">function 立即执行  （IIFE）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#closure-%E9%97%AD%E5%8C%85"><span class="toc-number">7.</span> <span class="toc-text">closure(闭包)</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Leo</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-12-18T14:47:59.887Z" itemprop="datePublished">2020-12-18</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h4 id="闭包-–-本质-是一个函数内部创建另一个函数"><a href="#闭包-–-本质-是一个函数内部创建另一个函数" class="headerlink" title="闭包  – 本质 是一个函数内部创建另一个函数"></a>闭包  – 本质 是一个函数内部创建另一个函数</h4><ul>
+<li><p>特性：</p>
+<ol>
+<li>函数嵌套函数</li>
+<li>函数内部可以引用外部参数和变量</li>
+<li>参数和变量不会被垃圾回收机制回收</li>
+</ol>
+</li>
+<li><p>结构：</p>
+<ol>
+<li>函数作返回值</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  <span class="keyword">var</span> name  = <span class="string">&#x27;leo&#x27;</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> k = a()</span><br><span class="line"><span class="built_in">console</span>.log(k())</span><br><span class="line"><span class="comment">//1.相当于k = function()&#123;var name ...&#125;</span></span><br><span class="line"><span class="comment">//2.匿名函数引用着name，故name不能被销毁</span></span><br><span class="line"><span class="comment">//3.k执行完毕后，除name外的变量会被销毁，产生内存消耗问题</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//关于定时器输出同一数值i的理解</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++)&#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(i + <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">    &#125;,<span class="number">100</span>)</span><br><span class="line">&#125;<span class="comment">//输出5个5</span></span><br><span class="line"><span class="comment">//理解：</span></span><br><span class="line"><span class="comment">//1.js单线程，for循环时，setTimeout进入任务队列等待，此时for循环在执行</span></span><br><span class="line"><span class="comment">//2.当setTimeout可以执行，for循环已经结束，i的值已经赋值为5，所以打印出5个5</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>闭包作为参数传递</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> num = <span class="number">15</span></span><br><span class="line"><span class="keyword">var</span> fn1 = <span class="function"><span class="keyword">function</span>(<span class="params">x</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(x&gt;num)&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(x)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span> <span class="function"><span class="keyword">function</span>(<span class="params">fn2</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> num = <span class="number">100</span></span><br><span class="line">    fn2(<span class="number">30</span>)</span><br><span class="line">&#125;(fn1)</span><br></pre></td></tr></table></figure>
+
+<p>优点:</p>
+<ol>
+<li>保护函数内的变量安全，实现封装，防止变量流入其他环境发生命名冲突</li>
+<li>在内存中维持一个变量，可做缓存</li>
+<li>匿名自治性函数可减少内存消耗</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>被引用的私有变量不能被销毁，增大内存消耗，造成内存泄漏，解决方法：使用完变量后手动赋值为null</li>
+<li>由于closure设计跨域访问，会导致性能损失。解决方法：把跨作用域变量存储在局部变量中，然后直接访问局部变量，减轻对执行速度的影响。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/dovlie/article/details/76339244?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase">https://blog.csdn.net/dovlie/article/details/76339244?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43586120/article/details/89456183">https://blog.csdn.net/weixin_43586120/article/details/89456183</a></p>
+<h4 id="词法作用域"><a href="#词法作用域" class="headerlink" title="词法作用域"></a>词法作用域</h4><h4 id="垃圾回收机制"><a href="#垃圾回收机制" class="headerlink" title="垃圾回收机制"></a>垃圾回收机制</h4><h4 id="内存泄漏"><a href="#内存泄漏" class="headerlink" title="内存泄漏"></a>内存泄漏</h4><h4 id="window-critical"><a href="#window-critical" class="headerlink" title="window critical"></a>window critical</h4><h4 id="function-立即执行-（IIFE）"><a href="#function-立即执行-（IIFE）" class="headerlink" title="function 立即执行  （IIFE）"></a>function 立即执行  （IIFE）</h4><ul>
+<li>function fnname(){}<ul>
+<li>function关键字声明一个函数 + 函数名 =&gt; 函数声明</li>
+</ul>
+</li>
+<li>var fnname = function(){}<ul>
+<li>function关键字声明一个函数，无函数命名，是匿名函数——-（匿名函数属于函数表达式）</li>
+<li>把匿名函数赋予一个变量fnname =&gt; 函数表达式 </li>
+</ul>
+</li>
+</ul>
+<p>解释：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**************变量声明提升*********/</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(a)</span><br><span class="line"><span class="keyword">var</span> a = <span class="number">1234</span> <span class="comment">//undefined  var 使得变量提升至作用域最先处</span></span><br><span class="line"></span><br><span class="line">=&gt; </span><br><span class="line"><span class="keyword">var</span> a;</span><br><span class="line"><span class="built_in">console</span>.log(a)</span><br><span class="line">a = <span class="number">1234</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*************函数声明提升**********/</span></span><br><span class="line"><span class="comment">//函数表达式</span></span><br><span class="line">bar()  </span><br><span class="line"><span class="keyword">var</span> bar = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="built_in">console</span>.log(<span class="number">1</span>)&#125; <span class="comment">//bar is not a function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//函数声明</span></span><br><span class="line">bar()</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>)</span>&#123;<span class="built_in">console</span>.log(<span class="number">1</span>)&#125; <span class="comment">//1   function 使得函数声明提升至作用域最先处</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>IIFE形成的逻辑</p>
+<p>function a(){}  —-函数声明</p>
+<p>a()                     —-函数调用</p>
+<p>function a(){}() —-立即执行  =&gt;==混淆了函数声明和函数调用，产生歧义==</p>
+<p>解释： </p>
+<ul>
+<li>函数声明 与 函数调用 不能同时使用,括号使得函数声明 转化为=&gt; 函数表达式，故解析器会将其作为函数表达式处理，只有程序执行到函数a时才会被访问（到了就执行）。</li>
+<li>==任何消除函数声明和函数表达式间歧义的方法，都可以被解析器正确识别。==</li>
+<li>用各种操作符告诉解析器（包括括号），这不是函数声明，而是函数表达式。其中一元运算符是消除歧义最快的方法。</li>
+<li>=&gt;一元运算符使语句表达式化  +  括号表示函数调用</li>
+<li>=&gt;即：==一元运算符使歧义可被识别，直接执行==</li>
+</ul>
+</li>
+</ul>
+<p>参考：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Lerch_Wang/article/details/100120343">https://blog.csdn.net/Lerch_Wang/article/details/100120343</a></li>
+</ol>
+<h4 id="closure-闭包"><a href="#closure-闭包" class="headerlink" title="closure(闭包)"></a>closure(闭包)</h4><p>概念：内部函数总是可以访问其所在的外部函数中声明的参数和变量，即使在其外部函数被返回（寿命终结，return）了之后</p>
+<p>另解：闭包找到的是用一地址中，父级函数中，对应变量最终的值</p>
+<p>闭包函数：声明在一个==函数中的函数==</p>
+<p>特点：</p>
+<ol>
+<li><p>让外部访问函数内部变量成为可能</p>
+</li>
+<li><p>局部变量常驻在内存中</p>
+<ul>
+<li>每次外部函数执行的时候，外部函数的引用地址不同，都会重新创建一个新的地址(指引用该函数的引用地址)</li>
+<li>凡是当前活动对象中有被内部子集引用的数据，这个数据不会被删除，保留一个指针给内部活动对象(只要内部函数引用过外部函数的参数，就会保留该数据，即使外部函数寿命已经终结)</li>
+</ul>
+</li>
+<li><p>避免使用全局变量，防止全局变量污染</p>
+</li>
+<li><p>会造成内存泄漏———–(缺点)</p>
+</li>
+</ol>
+<p>闭包内存泄漏为：key = value，key被删除后，value常驻内存中，局部变量闭包升级版 =&gt; 自由变量   ？？</p>
+<p>应用cloure：</p>
+<ol>
+<li>函数A中return函数B</li>
+<li>变量C = 函数A的调用</li>
+<li>调用函数C</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//例子1</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fun1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name = <span class="string">&#x27;leo&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;big&#x27;</span>, name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> c = fun1() <span class="comment">// &#123;console.log(&#x27;big&#x27;, name)&#125;</span></span><br><span class="line">c();<span class="comment">//&#x27;big leo&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fun2</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name = <span class="string">&#x27;leo&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;small&#x27;</span>, name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> c = fun2()</span><br><span class="line">c() <span class="comment">// &#x27;small undefined&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//理解一：fun1中name没有传入闭包，闭包会开拓一个作用域保存该参数，即使外部函数销毁，该参数依然占用内存存在；fun2中name’看似‘传入闭包，但仔细分析可以后发现，解析器解析的结果是：</span></span><br><span class="line">	<span class="comment">//1.var c = fun2()  =&gt;  var c = function(name)&#123;...&#125;</span></span><br><span class="line">	<span class="comment">//2.c()    =&gt;此处c没有传参，故name = undefined</span></span><br><span class="line">	<span class="comment">//3.此处引发一个疑问：return 后面的东西，解析器如何解析</span></span><br><span class="line">	<span class="comment">//自身理解：return 后的函数，若带参数，必须额外传参，内部相应的参数才能使用。这里展示了一点：闭包可以传参（额外传参）或者不传参（使用外部函数的参数）</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//name的值不能传入return中的匿名函数作为参数，否则name将丢失</span></span><br><span class="line"><span class="comment">//这里说明的是各变量传递关系</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/****************************************************/</span></span><br><span class="line"><span class="comment">//例子2</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerfn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">innerfn</span>(<span class="params"></span>)</span>&#123;    <span class="comment">//这里先函数声明，再return 函数</span></span><br><span class="line">        i++                <span class="comment">//与直接return 匿名函数作用一致</span></span><br><span class="line">        <span class="built_in">console</span>.log(i)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> innerfn</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> inner = outerfn()</span><br><span class="line">inner()</span><br><span class="line">inner()</span><br><span class="line">inner()  </span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> inner2 = outerfn()</span><br><span class="line">inner2()</span><br><span class="line">inner2()</span><br><span class="line">inner2()  <span class="comment">//1 2 3 1 2 3</span></span><br><span class="line"><span class="comment">//解释：每次外部函数执行时，都会开辟一块内存空间，创建一个新的地址，指向外部函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*****************************************************/</span></span><br><span class="line"><span class="comment">//例子3</span></span><br><span class="line"><span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerfn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        i++</span><br><span class="line">        <span class="built_in">console</span>.log(i)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> inner1 = outerfn()   </span><br><span class="line"><span class="keyword">var</span> inner2 = outerfn()</span><br><span class="line">inner1()</span><br><span class="line">inner2()</span><br><span class="line">inner1()</span><br><span class="line">inner2()  <span class="comment">//1 2 3 4</span></span><br><span class="line"><span class="comment">//解释：不同的外部函数多次调用同一个closure，原则上closure间的作用域互相独立，但这个closure所引用的变量已经记录，且该变量为全局变量，等价于多次运行同一个closure</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*****************************************************/</span></span><br><span class="line"><span class="comment">//例子4</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn41</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">3</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        ++a</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">alert(fn()())   <span class="comment">// 4</span></span><br><span class="line">alert(fn()())   <span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn42</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">3</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> ++a</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">alert(fn()()) <span class="comment">//undefined</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//解释：fn41中 的闭包引用没有return a的值，故fn41实际已经执行，++a也已经执行，但fn41没有获得 ++a 的值；</span></span><br><span class="line"><span class="comment">//fn42中 的闭包引用return a的值，使得fn42()有值</span></span><br><span class="line"><span class="comment">//每次闭包执行都把 a 赋值了一次，使得每次fn()()结果一样</span></span><br><span class="line"><span class="comment">//与例子2相比较，outerfn已经被执行一次并赋值到inner，此时已经把i保存在一个内存空间，仅inner()可以访问并修改</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**************************************************/</span></span><br><span class="line"><span class="comment">//例子5</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">outerfn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> i =<span class="number">0</span>             <span class="comment">//关键变量位置</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        i++</span><br><span class="line">        <span class="built_in">console</span>.log(i)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> inner1 = outerfn()</span><br><span class="line"><span class="keyword">var</span> inner2 = outerfn()</span><br><span class="line">inner1()</span><br><span class="line">inner2()</span><br><span class="line">inner1()</span><br><span class="line">inner2()</span><br><span class="line"><span class="comment">//解释：</span></span><br><span class="line"><span class="comment">//引用的变量i为外部函数内，closure外引用的变量，与例子3中的 i 作区别，故inner1()/inner2()分别执行时，获得的是相互独立的作用域中的变量，分别执行一次时结果一致。</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*************************************************/</span></span><br><span class="line"><span class="comment">//例子6</span></span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> m = <span class="number">0</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">getM</span>(<span class="params"></span>)</span>&#123;<span class="keyword">return</span> m&#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">seta</span>(<span class="params">val</span>)</span>&#123;m = val&#125;</span><br><span class="line">    <span class="built_in">window</span>.g = getM</span><br><span class="line">    <span class="built_in">window</span>.f = seta</span><br><span class="line">&#125;)()</span><br><span class="line">f(<span class="number">100</span>)</span><br><span class="line"><span class="built_in">console</span>.info(g()) <span class="comment">//100</span></span><br><span class="line"><span class="comment">//解释：</span></span><br><span class="line"><span class="comment">//依然是闭包的基本操作。匿名函数通过内部闭包开拓作用域保存参数m，并相继设置m的setter和getter</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/***********************************************/</span></span><br><span class="line"><span class="comment">//例子7</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> i = <span class="number">0</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">b</span>(<span class="params"></span>)</span>&#123; alert(++i) &#125;</span><br><span class="line">    <span class="keyword">return</span> b</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> c = a()</span><br><span class="line">c()        <span class="comment">//1</span></span><br><span class="line">c()        <span class="comment">//2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//解释：</span></span><br><span class="line"><span class="comment">//常规操作，不解释</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/***********************************************/</span></span><br><span class="line"><span class="comment">//例子8</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> count = <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        count++</span><br><span class="line">        <span class="built_in">console</span>.info(count)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> t1 = fn1()</span><br><span class="line">t1()   <span class="comment">// 1</span></span><br><span class="line">t1()   <span class="comment">// 2</span></span><br><span class="line">t1()   <span class="comment">// 3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//解释：常规操作，不解释</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/***********************************************/</span></span><br><span class="line"><span class="comment">//例子9</span></span><br><span class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span>(<span class="params">x</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> sum = <span class="number">1</span></span><br><span class="line">    <span class="keyword">var</span> tmp = <span class="function"><span class="keyword">function</span>(<span class="params">x</span>)</span>&#123;</span><br><span class="line">        sum = sum + x</span><br><span class="line">        <span class="keyword">return</span> tmp</span><br><span class="line">    &#125;</span><br><span class="line">    tmp.toString = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sum</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp</span><br><span class="line">&#125;</span><br><span class="line">alert(add(<span class="number">1</span>)(<span class="number">2</span>)(<span class="number">3</span>))   <span class="comment">//6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//解释：</span></span><br><span class="line"><span class="comment">//？？？？</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**********************************************/</span></span><br><span class="line"><span class="comment">//例子10</span></span><br><span class="line"><span class="keyword">var</span> lis = <span class="built_in">document</span>.getElementByTagName(<span class="string">&quot;li&quot;</span>)</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; lis.length; i++)&#123;</span><br><span class="line">    (<span class="function"><span class="keyword">function</span>(<span class="params">i</span>)</span>&#123;</span><br><span class="line">        lis[i].onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(i)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)(i)         <span class="comment">//事件处理函数中closure的写法</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//解释：</span></span><br><span class="line"><span class="comment">//closure的传参使用</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/***********************************************/</span></span><br><span class="line"><span class="comment">//例子11</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(++x)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f1()()  <span class="comment">//2</span></span><br><span class="line">f1()()  <span class="comment">//2</span></span><br><span class="line">f1()()  <span class="comment">//2   单纯执行var x=1；console.log（++x）</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> f2 = f1()</span><br><span class="line">m2()  <span class="comment">//2</span></span><br><span class="line">m2()  <span class="comment">//3</span></span><br><span class="line">m2()  <span class="comment">//4    常规</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/***********************************************/</span></span><br><span class="line"><span class="comment">//例子12</span></span><br><span class="line"><span class="keyword">var</span> f1 = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">              <span class="keyword">var</span> i = <span class="number">10</span></span><br><span class="line">              <span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">			  	  <span class="built_in">console</span>.log(++i)</span><br><span class="line">              &#125;</span><br><span class="line">			  <span class="keyword">return</span> fn</span><br><span class="line">          &#125;)()</span><br><span class="line">f1()  <span class="comment">//11</span></span><br><span class="line">f1()  <span class="comment">//12</span></span><br><span class="line"></span><br><span class="line">=&gt; </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="number">3</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(++a)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> f3 = f2()</span><br><span class="line">f3()  <span class="comment">//4</span></span><br><span class="line">f3()  <span class="comment">//5</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//解释：包含了函数声明、函数表达式、closure、匿名函数等知识</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/***************************************************/</span></span><br><span class="line"><span class="comment">//例子13</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> num = <span class="number">223</span></span><br><span class="line">    <span class="keyword">var</span> me = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(num)</span><br><span class="line">    &#125;</span><br><span class="line">    num++</span><br><span class="line">    <span class="keyword">return</span> me</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> lll = f1()</span><br><span class="line">lll()     <span class="comment">//224</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//解释：me引用的变量num，当其值在外部函数结束前改变，相应的会通过指针传递给num</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/****************************************************/</span></span><br><span class="line"><span class="comment">//例子14    (有点意思)</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fun</span>(<span class="params">a,b</span>)</span>&#123;      <span class="comment">//仅循环一次？</span></span><br><span class="line">    <span class="built_in">console</span>.log(b)</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        fun: <span class="function"><span class="keyword">function</span>(<span class="params">c</span>)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> fun(c,a)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> a = fun(<span class="number">0</span>)</span><br><span class="line">a.fun(<span class="number">1</span>)  <span class="comment">//0</span></span><br><span class="line">a.fun(<span class="number">2</span>)  <span class="comment">//0</span></span><br><span class="line">a.fun(<span class="number">3</span>)  <span class="comment">//0   因为0作为a参数传入，a.fun(1)中1作为c参数传入，0作为b参数传入，故输出0</span></span><br><span class="line"><span class="keyword">var</span> b = fun(<span class="number">0</span>).fun(<span class="number">1</span>).fun(<span class="number">2</span>).fun(<span class="number">3</span>)  <span class="comment">// undefined 0 1 2</span></span><br><span class="line"><span class="keyword">var</span> c = fun(<span class="number">0</span>).fun(<span class="number">1</span>)</span><br><span class="line">c.fun(<span class="number">2</span>)</span><br><span class="line">c.fun(<span class="number">3</span>)    <span class="comment">//undefined 0 1 1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/****************************************************/</span></span><br><span class="line"><span class="comment">//例子15</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> arr = []</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;             <span class="comment">//var =&gt; let 可使输出结果变为 0 1 2 3 4 </span></span><br><span class="line">        arr[i] = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> i                  </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> arr                        <span class="comment">//可见这里返回5个function，每个都是return i，故引用的变量为</span></span><br><span class="line">&#125;                                     <span class="comment">//i，最终i的值是多少，输出的list[i]()便是多少</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> list = fn()						 </span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>,len = list.length;i&lt;len;i++)&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(list[i]())</span><br><span class="line">&#125; <span class="comment">// 5 5 5 5</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/****************************************************/</span></span><br><span class="line"><span class="comment">//例子16</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> arr = []</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i= <span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;</span><br><span class="line">        arr[i] = (<span class="function"><span class="keyword">function</span>(<span class="params">i</span>)</span>&#123;             <span class="comment">//与上式对比，这里通过闭包把值返回到arr，类似于</span></span><br><span class="line">                 	 <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123;   <span class="comment">//setTimeout时的i的输出，通过let改变变量的作用域</span></span><br><span class="line">            			<span class="keyword">return</span> i           <span class="comment">//保留合适的变量值</span></span><br><span class="line">        		  	&#125;</span><br><span class="line">                  &#125;)(i)</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">return</span> arr</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> list = fn()</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>,len = list.length;i &lt; len;i++)&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(list[i]())</span><br><span class="line">&#125;   <span class="comment">// 0 1 2 3 4</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*****************************************************/</span></span><br><span class="line"><span class="comment">//例子17  使用闭包定义私有变量</span></span><br><span class="line"><span class="comment">//有点像响应式的setter、getter</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Product</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> name;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.setName = <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">        name = value;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.getName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> Product();</span><br><span class="line">p.setName(<span class="string">&quot;Fundebug&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(p.name); <span class="comment">// 输出undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(p.getName()); <span class="comment">// 输出Fundebug</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AD%E5%8C%85-%E2%80%93-%E6%9C%AC%E8%B4%A8-%E6%98%AF%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E5%86%85%E9%83%A8%E5%88%9B%E5%BB%BA%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">闭包  – 本质 是一个函数内部创建另一个函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%8D%E6%B3%95%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">2.</span> <span class="toc-text">词法作用域</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6"><span class="toc-number">3.</span> <span class="toc-text">垃圾回收机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">内存泄漏</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#window-critical"><span class="toc-number">5.</span> <span class="toc-text">window critical</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#function-%E7%AB%8B%E5%8D%B3%E6%89%A7%E8%A1%8C-%EF%BC%88IIFE%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">function 立即执行  （IIFE）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#closure-%E9%97%AD%E5%8C%85"><span class="toc-number">7.</span> <span class="toc-text">closure(闭包)</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/12/18/closure/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/12/18/closure/&text="><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/12/18/closure/&title="><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/12/18/closure/&is_video=false&description="><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=&body=Check out this article: http://example.com/2020/12/18/closure/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/12/18/closure/&title="><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/12/18/closure/&title="><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/12/18/closure/&title="><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/12/18/closure/&title="><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/12/18/closure/&name=&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/12/18/closure/&t="><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2020
+    Leo
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
